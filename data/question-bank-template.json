@@ -1,0 +1,20 @@
+[
+  {
+    "category": "教育学",
+    "type": "single",
+    "source": "我的题库",
+    "question": "题干写在这里",
+    "options": ["选项A", "选项B", "选项C", "选项D"],
+    "answer": "A",
+    "explanation": "解析写在这里"
+  },
+  {
+    "category": "教育心理学",
+    "type": "subjective",
+    "source": "我的题库",
+    "question": "简答题题干写在这里",
+    "options": [],
+    "answer": "背诵要点",
+    "explanation": "记忆提示"
+  }
+]
