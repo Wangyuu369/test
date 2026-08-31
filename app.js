@@ -1,66 +1,30 @@
 const STORAGE_KEY = "teacherExamWorkbench.v1";
 
-const defaultQuestions = [
-  {
-    id: "edu-001",
-    category: "教育学",
-    type: "single",
-    source: "默认题库",
-    question: "教师在教学过程中引导学生掌握系统科学文化知识和基本技能，发展智力和体力，这主要体现了教学的哪一项任务？",
-    options: ["德育任务", "智育任务", "体育任务", "美育任务"],
-    answer: "B",
-    explanation: "教学的首要任务通常是引导学生掌握系统的科学文化基础知识和基本技能，并在此基础上发展智能。"
-  },
-  {
-    id: "psy-001",
-    category: "心理学",
-    type: "single",
-    source: "默认题库",
-    question: "学生通过反复练习形成稳定、自动化的动作方式，这种心理现象通常称为？",
-    options: ["能力", "技能", "气质", "性格"],
-    answer: "B",
-    explanation: "技能是在练习基础上形成的合乎法则的活动方式，自动化是熟练技能的重要表现。"
-  },
-  {
-    id: "law-001",
-    category: "教育法规",
-    type: "single",
-    source: "默认题库",
-    question: "义务教育具有强制性、免费性和什么特征？",
-    options: ["选拔性", "普及性", "淘汰性", "营利性"],
-    answer: "B",
-    explanation: "义务教育的基本特征包括强制性、免费性和普及性。"
-  },
-  {
-    id: "ethics-001",
-    category: "教师职业道德",
-    type: "multi",
-    source: "默认题库",
-    question: "下列属于教师职业道德规范核心内容的有？",
-    options: ["爱国守法", "爱岗敬业", "关爱学生", "终身学习"],
-    answer: "ABCD",
-    explanation: "中小学教师职业道德规范强调爱国守法、爱岗敬业、关爱学生、教书育人、为人师表、终身学习。"
-  },
-  {
-    id: "memo-001",
-    category: "教育心理学",
-    type: "subjective",
-    source: "默认题库",
-    question: "简述建构主义学习观的核心要点。",
-    options: [],
-    answer: "学习是学习者主动建构意义的过程；学习受原有经验影响；强调情境、协作、会话和意义建构。",
-    explanation: "背诵时抓住主动建构、经验基础、社会互动、真实情境四个关键词。"
-  }
-];
+let defaultQuestions = [];
+async function loadQuestionsFromFile() {
+  try {
+    const response = await fetch("./教育理论基础3600题_题库1.json");
+    const data = await response.json();
 
-const knowledgeMap = [
-  { title: "教育学", items: ["教育目的", "课程与教学", "德育规律", "班级管理"] },
-  { title: "心理学", items: ["认知过程", "情绪情感", "人格差异", "学习动机"] },
-  { title: "教育心理学", items: ["学习理论", "知识迁移", "问题解决", "品德形成"] },
-  { title: "教育法规", items: ["义务教育法", "教师法", "未成年人保护", "学生权利"] },
-  { title: "师德与新课改", items: ["职业道德", "核心素养", "学生观", "评价改革"] },
-  { title: "主观题模板", items: ["概念解释", "原则意义", "材料分析", "教学设计"] }
-];
+    defaultQuestions = data.map((item) => ({
+      id: item.id,
+      category: item.category,
+      type: item.type,
+      source: item.source,
+      question: item.question,
+      options: item.options || [],
+      answer: item.answer,
+      explanation: item.explanation || ""
+    }));
+
+    state.questions = defaultQuestions;
+    saveState();
+    renderAll();
+
+  } catch (error) {
+    console.error("题库加载失败：", error);
+  }
+}
 
 let state = loadState();
 let selectedQuestionId = state.currentQuestionId || state.questions[0]?.id;
@@ -520,5 +484,6 @@ function switchView(view) {
 }
 
 bindEvents();
-renderAll();
+loadQuestionsFromFile();
 renderFlashcard();
+
