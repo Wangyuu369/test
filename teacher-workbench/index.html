@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>教师编制备考工作台</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">教</div>
+        <div>
+          <h1>教师编制备考</h1>
+          <p>刷题 · 记忆 · 复盘</p>
+        </div>
+      </div>
+      <nav class="nav-tabs" aria-label="工作台导航">
+        <button class="nav-tab is-active" data-view="dashboard">总览</button>
+        <button class="nav-tab" data-view="practice">刷题</button>
+        <button class="nav-tab" data-view="memory">记忆</button>
+        <button class="nav-tab" data-view="wrongbook">错题</button>
+        <button class="nav-tab" data-view="bank">题库</button>
+      </nav>
+      <div class="streak-box">
+        <span>连续学习</span>
+        <strong id="streakDays">0 天</strong>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <section class="view is-active" id="dashboard">
+        <header class="page-head">
+          <div>
+            <p class="eyebrow">今日工作台</p>
+            <h2>把教师编制复习拆成可追踪的小胜利</h2>
+          </div>
+          <button class="primary-btn" id="startPracticeBtn">开始刷题</button>
+        </header>
+
+        <div class="metric-grid">
+          <article class="metric">
+            <span>累计作答</span>
+            <strong id="totalAnswered">0</strong>
+            <small>所有题库</small>
+          </article>
+          <article class="metric">
+            <span>总体正确率</span>
+            <strong id="overallAccuracy">0%</strong>
+            <small>自动保存</small>
+          </article>
+          <article class="metric">
+            <span>错题数量</span>
+            <strong id="wrongCount">0</strong>
+            <small>可导出</small>
+          </article>
+          <article class="metric">
+            <span>已导入题目</span>
+            <strong id="questionCount">0</strong>
+            <small>JSON / CSV</small>
+          </article>
+        </div>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>分类准确率</h3>
+            <select id="categoryFilter" aria-label="分类筛选"></select>
+          </div>
+          <div id="categoryStats" class="category-stats"></div>
+        </section>
+
+        <section class="panel two-column">
+          <div>
+            <h3>本周复习节奏</h3>
+            <div id="weeklyBars" class="weekly-bars"></div>
+          </div>
+          <div>
+            <h3>薄弱提醒</h3>
+            <ul id="weakList" class="clean-list"></ul>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="practice">
+        <header class="page-head compact">
+          <div>
+            <p class="eyebrow">智能刷题</p>
+            <h2 id="practiceTitle">请选择题目</h2>
+          </div>
+          <div class="control-row">
+            <select id="practiceCategory" aria-label="选择分类"></select>
+            <button class="ghost-btn" id="shuffleBtn">换一题</button>
+          </div>
+        </header>
+
+        <article class="question-panel">
+          <div class="question-meta">
+            <span id="questionType">单选</span>
+            <span id="questionCategory">教育学</span>
+            <span id="questionSource">默认题库</span>
+          </div>
+          <h3 id="questionText">题目加载中</h3>
+          <div id="optionList" class="option-list"></div>
+          <textarea id="subjectiveAnswer" class="answer-box" rows="5" placeholder="主观题可在这里默写要点"></textarea>
+          <div class="practice-actions">
+            <button class="primary-btn" id="submitAnswerBtn">提交答案</button>
+            <button class="ghost-btn" id="markWrongBtn">加入错题</button>
+            <button class="ghost-btn" id="nextQuestionBtn">下一题</button>
+          </div>
+          <div id="answerFeedback" class="feedback"></div>
+        </article>
+      </section>
+
+      <section class="view" id="memory">
+        <header class="page-head compact">
+          <div>
+            <p class="eyebrow">知识架构</p>
+            <h2>按考点搭一张能背下来的图</h2>
+          </div>
+          <button class="ghost-btn" id="generateCardsBtn">生成背题卡</button>
+        </header>
+
+        <section class="mindmap-wrap">
+          <div class="mindmap-center">教师编制</div>
+          <div id="mindmap" class="mindmap"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>背题卡</h3>
+            <div class="control-row">
+              <button class="ghost-btn" id="prevCardBtn">上一张</button>
+              <button class="ghost-btn" id="nextCardBtn">下一张</button>
+            </div>
+          </div>
+          <article class="flashcard" id="flashcard">
+            <p id="flashFront">选择一道题开始背诵。</p>
+            <button class="primary-btn" id="flipCardBtn">看答案</button>
+            <div id="flashBack" class="flash-back"></div>
+          </article>
+        </section>
+      </section>
+
+      <section class="view" id="wrongbook">
+        <header class="page-head compact">
+          <div>
+            <p class="eyebrow">错题集</p>
+            <h2>把错误变成下一轮提分路线</h2>
+          </div>
+          <div class="control-row">
+            <button class="ghost-btn" id="exportWrongJsonBtn">导出 JSON</button>
+            <button class="ghost-btn" id="exportWrongCsvBtn">导出 CSV</button>
+          </div>
+        </header>
+        <div id="wrongList" class="wrong-list"></div>
+      </section>
+
+      <section class="view" id="bank">
+        <header class="page-head compact">
+          <div>
+            <p class="eyebrow">题库管理</p>
+            <h2>导入新题库，保留每次刷题轨迹</h2>
+          </div>
+          <button class="danger-btn" id="resetProgressBtn">清空进度</button>
+        </header>
+
+        <section class="panel import-panel">
+          <label class="file-drop">
+            <input id="bankFileInput" type="file" accept=".json,.csv,.txt" multiple>
+            <span>导入题库文件</span>
+          </label>
+          <div class="format-sample">
+            <h3>字段</h3>
+            <p>question, options, answer, explanation, category, type, source</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>当前题库</h3>
+            <button class="ghost-btn" id="downloadTemplateBtn">下载模板</button>
+          </div>
+          <div id="bankList" class="bank-list"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
